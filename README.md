@@ -53,7 +53,7 @@ If the user does not choose one and the parameter is required, then conversation
 
 The processing has two phases:
 
-1. For all parameter definitions for a class, determine if an entity value can be reliably obtained using just the parameter definition, the statement, and any currently known entity values (set using `nlcconfig.updateGlobalParameterValues()).
+1. For all parameter definitions for a class, determine if an entity value can be reliably obtained using just the parameter definition, the statement, and any currently known entity values (set using `nlcconfig.updateGlobalParameterValues()`).
 
 2. For each required parameter without a value from the first phase, in the order in which they are defined, use the following techniques to make a best guess at the entity value:
 
