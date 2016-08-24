@@ -1,0 +1,9 @@
+{
+  "fuzzy.result": "OK.  I didn't find an exact match for the *%s* parameter, but I did find some possibilities.\nPlease enter the number associated with the correct choice.\n%s",
+  "fuzzy.result.none": "None of these choices are what I want.",
+  "fuzzy.result.item": "(*%s*): %s",
+
+  "cognitive.prompt.param": "OK. What is the value for the *%s* parameter?",
+  "cognitive.prompt.param.again": "I still can't be sure I've got the right value for the *%s* parameter. Please try to enter only the parameter value.",
+  "cognitive.prompt.param.parsingdisabled": "OK. What is the value for the *%s* parameter? Please try to enter only the parameter value."
+}
