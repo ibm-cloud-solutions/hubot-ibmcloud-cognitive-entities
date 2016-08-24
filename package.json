@@ -1,0 +1,63 @@
+{
+  "name": "hubot-ibmcloud-cognitive-entities",
+  "version": "0.0.1",
+  "description": "Provides cognitive utilities to assist Hubot developers with deriving entities from statements.",
+  "main": "index.js",
+  "repository": {
+    "url": "https://github.com/ibm-cloud-solutions/hubot-ibmcloud-cognitive-entities",
+    "type": "git"
+  },
+  "scripts": {
+    "lint": "eslint src/**/*.js index.js test/*.js",
+    "test": ". test/.env && mocha test",
+    "coverage": ". test/.env && istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "keywords": [
+    "cognitive",
+    "nlc",
+    "natural language",
+    "parameter extraction",
+    "entities",
+    "ibm cloud",
+    "hubot",
+    "hubot utilities",
+    "hubot scripts"
+  ],
+  "author": "ibm-cloud-solutions",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coffee-script": "^1.10.0",
+    "coveralls": "^2.11.12",
+    "eslint": "^2.9.0",
+    "eslint-config-strongloop": "^2.0.1",
+    "hubot": "^2.19.0",
+    "hubot-ibmcloud-formatter": ">=0.0.29",
+    "hubot-test-helper": "1.4.4",
+    "istanbul": "0.4.0",
+    "mocha": "^2.4.5",
+    "mocha-sprinkles": "^2.2.1",
+    "nock": "^8.0.0"
+  },
+  "peerDependencies": {
+    "hubot": "^2.19.0"
+  },
+  "engines": {
+    "node": ">= 4.2.0"
+  },
+  "files": [
+    "src",
+    "index.js"
+  ],
+  "dependencies": {
+    "fuse.js": "^2.4.1",
+    "hubot-ibmcloud-cognitive-lib": ">=0.0.37",
+    "hubot-ibmcloud-utils": ">=0.0.8",
+    "hubot-conversation": "^1.1.1",
+    "i18n-2": "^0.6.3",
+    "lodash": "^4.13.1",
+    "pos": "^0.3.0",
+    "string-length": "^1.0.1",
+    "watson-developer-cloud": "^1.9.4"
+  }
+}
