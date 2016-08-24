@@ -385,13 +385,13 @@ const TEST_DATABASENAMES_LATEST = TEST_DATABASENAMES_SET.concat([ 'somestuff', '
 const TEST_VIEWNAMES_SET = ['AppTestView', 'AppProdView', 'AppDevView'];
 const TEST_VIEWNAMES_LATEST = TEST_VIEWNAMES_SET.concat([ 'seestuff', 'all', 'byUser', 'byTenant' ]);
 
-function getDatabaseNameFunction(parameterName, parameters) {
+function getDatabaseNameFunction(robot, res, parameterName, parameters) {
 	return new Promise(function(resolve, reject) {
 		resolve(TEST_DATABASENAMES_LATEST);
 	});
 };
 
-function getViewNameFunction(parameterName, parameters) {
+function getViewNameFunction(robot, res, parameterName, parameters) {
 	return new Promise(function(resolve, reject) {
 		if (parameters && parameters.databasename) {
 			resolve(TEST_VIEWNAMES_LATEST);

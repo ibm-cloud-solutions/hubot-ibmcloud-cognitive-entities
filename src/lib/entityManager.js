@@ -284,12 +284,13 @@ function doAskForJustValueNoParsing(robot, res, switchBoard, className, classPar
  * must be registered by the app.  If so, this function is invoked to retrieve the entities.
  *
  * @param {object} robot [The bot instance.]
+ * @param {object} res [The bot response object.]
  * @param {string} className [The name of the class being processed.]
  * @param {map} classParameter [The class parameter definition for the class parameter being processed.]
  * @param {map} parameters [A map of parameter name -> parameter value.]
  * @return {promise: array of strings} [The complete current list of entities for the parameter via Promise.resolve().]
  */
-function getLatestEntities(robot, className, classParameter, parameters) {
+function getLatestEntities(robot, res, className, classParameter, parameters) {
 	return new Promise(function(resolve, reject) {
 
 		// If a function defined in nlc json to handle retrieving the entities exists, use it
@@ -300,7 +301,7 @@ function getLatestEntities(robot, className, classParameter, parameters) {
 			if (entityFunction) {
 
 				// Invoke the defined and registered function to obtain the complete, current list of entities.
-				entityFunction(classParameter.name, parameters).then(function(entityList) {
+				entityFunction(robot, res, classParameter.name, parameters).then(function(entityList) {
 					robot.logger.debug(`${TAG}: getLatestEntities(): Latest set of entities for parameter ${getDisplayableClassParameter(className, classParameter)} have been obtained from the entity function; entities = [${entityList}].`);
 					resolve(entityList);
 				}).catch(function(err) {
@@ -706,7 +707,7 @@ function processStatementForParameter(robot, res, switchBoard, statement, classN
 		var latestEntities;
 
 		// Request the latest, most complete set of entity values from the application
-		getLatestEntities(robot, className, classParameter, parameters).then(function(entityList) {
+		getLatestEntities(robot, res, className, classParameter, parameters).then(function(entityList) {
 			robot.logger.debug(`${TAG}: processStatementForParameter(): Latest / complete set of entities = ${entityList}; starting best match processing.`);
 
 			// With the latest, most complete set of entity values try to abstract the parameter value again
