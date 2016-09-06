@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 
-var entityTypeHandlers = {};
+let entityTypeHandlers = {};
 
 
 /**
@@ -94,7 +94,7 @@ exports.getEntityValue = function(entityType, statement, entityDecoder, entityVa
  */
 exports.isPossibleValuesSupported = function(entityType) {
 	let entityTypeHandler = getEntityTypeHandler(entityType);
-	var isSupported = false;
+	let isSupported = false;
 	if (entityTypeHandler) {
 		if (entityTypeHandler.getPossibleValues) {
 			isSupported = true;

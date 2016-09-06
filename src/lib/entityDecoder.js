@@ -6,8 +6,8 @@
   */
 'use strict';
 
-var path = require('path');
-var TAG = path.basename(__filename);
+let path = require('path');
+let TAG = path.basename(__filename);
 
 const env = require('./env');
 const pos = require('pos');
@@ -84,20 +84,20 @@ EntityDecoder.prototype.clone = function(inStatement) {
  * @return {promise: array of strings} [The list of nouns that appear in seed statements via Promise.resolve().]
  */
 EntityDecoder.prototype.getNounsToIgnore = function() {
-	var self = this;
+	let self = this;
 	return new Promise(function(resolve, reject) {
 
 		if (!self.ignoreNouns) {
 			self.ignoreNouns = [ 'i' ];
 			if (self.seedTexts) {
-				for (var i = 0; i < self.seedTexts.length; i++) {
-					var words = new pos.Lexer().lex(self.seedTexts[i]);
-					var tagger = new pos.Tagger();
-					var taggedWords = tagger.tag(words);
-					for (var j = 0; j < taggedWords.length; j++) {
-						var taggedWord = taggedWords[j];
-						var twWord = taggedWord[0].toLowerCase();
-						var twTag = taggedWord[1];
+				for (let i = 0; i < self.seedTexts.length; i++) {
+					let words = new pos.Lexer().lex(self.seedTexts[i]);
+					let tagger = new pos.Tagger();
+					let taggedWords = tagger.tag(words);
+					for (let j = 0; j < taggedWords.length; j++) {
+						let taggedWord = taggedWords[j];
+						let twWord = taggedWord[0].toLowerCase();
+						let twTag = taggedWord[1];
 						if (twTag === 'NN' || twTag === 'NNP') {
 							if (_.indexOf(self.ignoreNouns, twWord) < 0) {
 								self.ignoreNouns.push(twWord);
@@ -118,12 +118,12 @@ EntityDecoder.prototype.getNounsToIgnore = function() {
  * @return {promise: array of 2 element arrays} [Tagged words from statement (word/tag) via Promise.resolve().]
  */
 EntityDecoder.prototype.getTaggedWords = function() {
-	var self = this;
+	let self = this;
 	return new Promise(function(resolve, reject) {
 
 		if (!self.taggedWords) {
-			var words = new pos.Lexer().lex(self.statement);
-			var tagger = new pos.Tagger();
+			let words = new pos.Lexer().lex(self.statement);
+			let tagger = new pos.Tagger();
 			self.taggedWords = tagger.tag(words);
 			resolve(self.taggedWords);
 		}
@@ -138,7 +138,7 @@ EntityDecoder.prototype.getTaggedWords = function() {
  * @return {promise: array of objects} [Entities from the statement via Promise.resolve().]
  */
 EntityDecoder.prototype.getEntities = function() {
-	var self = this;
+	let self = this;
 	return new Promise(function(resolve, reject) {
 
 		if (!self.entities) {
@@ -172,19 +172,19 @@ EntityDecoder.prototype.getEntities = function() {
  * @return {promise: array of strings} [List of nouns found in the statement via Promise.resolve().]
  */
 EntityDecoder.prototype.getNouns = function() {
-	var self = this;
+	let self = this;
 	return new Promise(function(resolve, reject) {
 
-		var retNouns = [];
+		let retNouns = [];
 		self.getNounsToIgnore().then(function(ignore) {
 			self.robot.logger.debug(`${TAG}: getNouns(): nounsToIgnore = ${ignore}`);
 			self.getTaggedWords().then(function(tw) {
 				self.robot.logger.debug(`${TAG}: getNouns(): taggedWords = ${tw}`);
 				if (tw) {
-					for (var i = 0; i < tw.length; i++) {
-						var twItem = tw[i];
-						var twWord = twItem[0];
-						var twTag = twItem[1];
+					for (let i = 0; i < tw.length; i++) {
+						let twItem = tw[i];
+						let twWord = twItem[0];
+						let twTag = twItem[1];
 						if (twTag === 'NN' || twTag === 'NNP') {
 							if (_.indexOf(retNouns, twWord) < 0) {
 								if (_.indexOf(ignore, twWord.toLowerCase()) < 0) {
@@ -216,17 +216,17 @@ EntityDecoder.prototype.getNouns = function() {
  * @return {promise: array of strings} [List of number strings found in statement via Promise.resolve().]
  */
 EntityDecoder.prototype.getNumbers = function() {
-	var self = this;
+	let self = this;
 	return new Promise(function(resolve, reject) {
 
-		var retNumbers = [];
+		let retNumbers = [];
 		self.getTaggedWords().then(function(tw) {
 			self.robot.logger.debug(`${TAG}: getNumbers(): taggedWords = ${tw}`);
 			if (tw) {
-				for (var i = 0; i < tw.length; i++) {
-					var twItem = tw[i];
-					var twWord = twItem[0];
-					var twTag = twItem[1];
+				for (let i = 0; i < tw.length; i++) {
+					let twItem = tw[i];
+					let twWord = twItem[0];
+					let twTag = twItem[1];
 					if (twTag === 'CD') {
 						if (self.statement.indexOf(' ' + twWord) >= 0) { // Safety check to make sure number is not part of a word
 							if (_.indexOf(retNumbers, twWord) < 0) {
@@ -254,15 +254,15 @@ EntityDecoder.prototype.getNumbers = function() {
  * @return {promise: array of strings} [List of city strings found in statement via Promise.resolve().]
  */
 EntityDecoder.prototype.getCityEntities = function() {
-	var self = this;
+	let self = this;
 	return new Promise(function(resolve, reject) {
 
 		self.getEntities().then(function(entities) {
 			self.robot.logger.debug(`${TAG}: getCityEntities(): entities = ${JSON.stringify(entities)}`);
-			var cities = [];
+			let cities = [];
 			if (entities.entities) {
-				for (var i = 0; i < entities.entities.length; i++) {
-					var entity = entities.entities[i];
+				for (let i = 0; i < entities.entities.length; i++) {
+					let entity = entities.entities[i];
 					if (entity.type === 'City') {
 						cities.push(entity.text);
 					}
