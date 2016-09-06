@@ -1,6 +1,6 @@
 {
   "name": "hubot-ibmcloud-cognitive-entities",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Provides cognitive utilities to assist Hubot developers with deriving entities from statements.",
   "main": "index.js",
   "repository": {
