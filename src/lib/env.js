@@ -21,7 +21,7 @@ const settings = {
 module.exports = settings;
 
 module.exports.isTrue = function(val) {
-	var retBool = false;
+	let retBool = false;
 	if (val && (val === true || val === 'true' || val === 'TRUE' ||
 		val === 'YES' || val === 'Y' || val === 'y')) {
 		retBool = true;
@@ -30,7 +30,7 @@ module.exports.isTrue = function(val) {
 };
 
 module.exports.numberValue = function(val) {
-	var retNumber = val;
+	let retNumber = val;
 	if (isNaN(val)) {
 		try {
 			retNumber = parseFloat(val);

@@ -416,15 +416,15 @@ describe('Test the entity extracting', function(){
 
 		return nlcDb.open().then((res) => {
 			db = res;
-			var dbputList = [];
-			var textsCount = 1;
-			for (var i = 0; i < ALL_PARAMETERS.length; i++) {
+			let dbputList = [];
+			let textsCount = 1;
+			for (let i = 0; i < ALL_PARAMETERS.length; i++) {
 				let classParameters = ALL_PARAMETERS[i][0];
 				let texts = ALL_PARAMETERS[i][1];
-				for (var j = 0; j < classParameters.length; j++) {
+				for (let j = 0; j < classParameters.length; j++) {
 					let classParameter = classParameters[j];
-					for (var k = 0; k < texts.length; k++) {
-						var textEntity = {
+					for (let k = 0; k < texts.length; k++) {
+						let textEntity = {
 							_id: `${COMP_NAME}_${textsCount++}_${COMP_VERSION}`,
 							class: classParameter._id,
 							text: texts[k],
@@ -436,8 +436,8 @@ describe('Test the entity extracting', function(){
 				}
 			}
 			return Promise.all(dbputList).then(function(results) {
-				var hasError = false;
-				for (var j = 0; j < results.length; j++) {
+				let hasError = false;
+				for (let j = 0; j < results.length; j++) {
 					if (results[j].ok !== true) {
 						done(new Error(`Result number ${j} had an error; result = ${results[j]}`));
 						hasError = true;
@@ -467,12 +467,12 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single entity parameter type; no entityfunction, optional, or values', function() {
-		var classParameter = CLASS_PARAMETER_ENTITY;
+		let classParameter = CLASS_PARAMETER_ENTITY;
 
 		it('Base entity; no value; enter value at first prompt; no error expected', function(done) {
-			var databasenameValue = 'somevalue';
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = 'somevalue';
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${databasenameValue}`);
 				}
@@ -480,7 +480,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -495,12 +495,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; value in list (does not matter); no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -515,9 +515,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; 2 values in list (does not matter); enter value at first prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${databasenameValue}`);
 				}
@@ -525,7 +525,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -540,9 +540,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; 2 values in list (does not matter); Reenter same statement at first prompt; enter value at second prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', statement);
 				}
@@ -553,7 +553,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters).then(function(parameters) {
@@ -570,8 +570,8 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter exit at first prompt; no error expected', function(done) {
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', 'exit');
 				}
@@ -579,7 +579,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -593,8 +593,8 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; Enter multiple at first prompt; enter exit at second prompt; no error expected', function(done) {
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `Get database details ${TEST_DATABASENAMES_SET[0]} ${TEST_DATABASENAMES_SET[1]}`);
 				}
@@ -605,7 +605,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters).then(function(parameters) {
@@ -623,12 +623,12 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single entity parameter type; with entityfunction, no optional or values', function() {
-		var classParameter = CLASS_PARAMETER_ENTITY_F;
+		let classParameter = CLASS_PARAMETER_ENTITY_F;
 
 		it('Base entity; no value; enter value at first prompt; no error expected', function(done) {
-			var databasenameValue = 'somevalue';
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = 'somevalue';
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${databasenameValue}`);
 				}
@@ -636,7 +636,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -651,9 +651,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with value in list at first prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `I'd like to use ${databasenameValue}`);
 				}
@@ -661,7 +661,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -676,9 +676,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with value not in list at first prompt; enter none at second prompt; enter value not in list at third prompt; no error expected', function(done) {
-			var databasenameValue = 'somevalue';
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = 'somevalue';
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `I'd like to use ${databasenameValue}`);
 				}
@@ -692,7 +692,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -707,9 +707,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with value not in list at first prompt; enter none index at second prompt; enter value not in list at third prompt; no error expected', function(done) {
-			var databasenameValue = 'somevalue';
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = 'somevalue';
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `I'd like to use ${databasenameValue}`);
 				}
@@ -723,7 +723,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -738,9 +738,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with value not in list at first prompt; enter invalid text at second prompt; enter value not in list at third prompt; no error expected', function(done) {
-			var databasenameValue = 'somevalue';
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = 'somevalue';
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `I'd like to use ${databasenameValue}`);
 				}
@@ -754,7 +754,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -769,9 +769,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with value not in list at first prompt; enter bad index at second prompt; enter value not in list at third prompt; no error expected', function(done) {
-			var databasenameValue = 'somevalue';
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = 'somevalue';
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `I'd like to use ${databasenameValue}`);
 				}
@@ -785,7 +785,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -800,9 +800,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with value not in list at first prompt; enter value choice at second prompt; enter value not in list at third prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', 'I\'d like to use somevalue');
 				}
@@ -813,7 +813,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -828,9 +828,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with value not in list at first prompt; enter choice index at second prompt; enter value not in list at third prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', 'I\'d like to use somevalue');
 				}
@@ -841,7 +841,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -856,9 +856,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; value not in list; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
-			var statement = 'Get database details somevalue';
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
+			let statement = 'Get database details somevalue';
+			let replyFn = function(msg) {
 				if (msg.includes(i18n.__('fuzzy.result.none'))) {
 					room.user.say('mimiron', '1');
 				}
@@ -866,7 +866,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -881,12 +881,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; value in list; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -901,12 +901,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; 2 values in list; first one used; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -923,14 +923,14 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single entity parameter type; with optional and no entityfunction or values', function() {
-		var classParameter = CLASS_PARAMETER_ENTITY_R;
+		let classParameter = CLASS_PARAMETER_ENTITY_R;
 
 		it('Base entity; no value; no prompt; no error expected', function(done) {
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -944,12 +944,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; value in list (does not matter); no prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -964,12 +964,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; 2 values in list (does not matter); no prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -985,14 +985,14 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single entity parameter type; with entityfunction and optional, no values', function() {
-		var classParameter = CLASS_PARAMETER_ENTITY_F_R;
+		let classParameter = CLASS_PARAMETER_ENTITY_F_R;
 
 		it('Base entity; no value; no prompt; no error expected', function(done) {
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1006,9 +1006,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; value not in list; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
-			var statement = 'Get database details somevalue';
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
+			let statement = 'Get database details somevalue';
+			let replyFn = function(msg) {
 				if (msg.includes(i18n.__('fuzzy.result.none'))) {
 					room.user.say('mimiron', '1');
 				}
@@ -1016,7 +1016,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1031,12 +1031,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; value in list; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1051,12 +1051,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; 2 values in list; first one used; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1073,12 +1073,12 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single entity parameter type; with values and no entityfunctionor  optional', function() {
-		var classParameter = CLASS_PARAMETER_ENTITY_V;
+		let classParameter = CLASS_PARAMETER_ENTITY_V;
 
 		it('Base entity; no value; enter value not in list at first prompt; no error expected', function(done) {
-			var databasenameValue = 'somevalue';
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = 'somevalue';
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${databasenameValue}`);
 				}
@@ -1086,7 +1086,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1101,9 +1101,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter value in list at first prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${databasenameValue}`);
 				}
@@ -1111,7 +1111,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1126,12 +1126,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; value in list; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1146,12 +1146,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; 2 values in list; no prompt (first value used); no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1166,9 +1166,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; 2 values not in list (does not matter); Reenter same statement at first prompt; enter value at second prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = 'Get database details somevalue anothervalue';
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = 'Get database details somevalue anothervalue';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', statement);
 				}
@@ -1179,7 +1179,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters).then(function(parameters) {
@@ -1198,12 +1198,12 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single entity parameter type; with values and entityfunction, and no optional', function() {
-		var classParameter = CLASS_PARAMETER_ENTITY_V_F;
+		let classParameter = CLASS_PARAMETER_ENTITY_V_F;
 
 		it('Base entity; no value; enter value at first prompt; no error expected', function(done) {
-			var databasenameValue = 'somevalue';
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = 'somevalue';
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${databasenameValue}`);
 				}
@@ -1211,7 +1211,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1226,9 +1226,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with value in values list at first prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `I'd like to use ${databasenameValue}`);
 				}
@@ -1236,7 +1236,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1251,9 +1251,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with value in entities list at first prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `I'd like to use ${databasenameValue}`);
 				}
@@ -1261,7 +1261,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1276,12 +1276,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; value in values list; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1296,12 +1296,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with value in entities list at first prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
-			var statement = `Get database details ${databasenameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
+			let statement = `Get database details ${databasenameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1318,14 +1318,14 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single entity parameter type; with values and optional, and no entityfunction', function() {
-		var classParameter = CLASS_PARAMETER_ENTITY_V_R;
+		let classParameter = CLASS_PARAMETER_ENTITY_V_R;
 
 		it('Base entity; no value; enter value no prompt; no error expected', function(done) {
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1339,12 +1339,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; value in list; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1359,12 +1359,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; 2 values in list; no prompt (first value used); no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue} ${TEST_DATABASENAMES_SET[1]}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1379,11 +1379,11 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; 2 values not in list (does not matter); Reenter same statement at first prompt; enter value at second prompt; no error expected', function(done) {
-			var statement = 'Get database details somevalue anothervalue';
-			var replyFn = function(msg) {
+			let statement = 'Get database details somevalue anothervalue';
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters).then(function(parameters) {
@@ -1401,14 +1401,14 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single entity parameter type; with values, entityfunction, and optional', function() {
-		var classParameter = CLASS_PARAMETER_ENTITY_V_F_R;
+		let classParameter = CLASS_PARAMETER_ENTITY_V_F_R;
 
 		it('Base entity; no value; no prompt; no error expected', function(done) {
-			var statement = 'Get database details';
-			var replyFn = function(msg) {
+			let statement = 'Get database details';
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1422,12 +1422,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; value in values list; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var statement = `Get database details ${databasenameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let statement = `Get database details ${databasenameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1442,12 +1442,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with value in entities list at first prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
-			var statement = `Get database details ${databasenameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
+			let statement = `Get database details ${databasenameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1464,13 +1464,13 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for two entity parameter types; with values and entityfunction, and no optional', function() {
-		var classParameter = CLASS_PARAMETER_ENTITY2_V_F;
+		let classParameter = CLASS_PARAMETER_ENTITY2_V_F;
 
 		it('Base entity; no value; enter first value at first prompt; enter second value at first prompt; no error expected', function(done) {
-			var databasenameValue = 'somedatabase';
-			var viewnameValue = 'someview';
-			var statement = 'Run database view';
-			var replyFn = function(msg) {
+			let databasenameValue = 'somedatabase';
+			let viewnameValue = 'someview';
+			let statement = 'Run database view';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${databasenameValue}`);
 				}
@@ -1481,7 +1481,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1498,10 +1498,10 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with first value in values list at first prompt; enter phrase with second value at first prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var viewnameValue = `${TEST_VIEWNAMES_SET[0]}`;
-			var statement = 'Run database view';
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let viewnameValue = `${TEST_VIEWNAMES_SET[0]}`;
+			let statement = 'Run database view';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `I'd like to use ${databasenameValue}`);
 				}
@@ -1512,7 +1512,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1529,10 +1529,10 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; no value; enter phrase with first value in entities list at first prompt; enter phrase with second value at first prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
-			var viewnameValue = `${TEST_VIEWNAMES_LATEST[3]}`;
-			var statement = 'Run database view';
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
+			let viewnameValue = `${TEST_VIEWNAMES_LATEST[3]}`;
+			let statement = 'Run database view';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `I'd like to use ${databasenameValue}`);
 				}
@@ -1543,7 +1543,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1560,10 +1560,10 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; first value in values list; second value in values list at prompt; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var viewnameValue = `${TEST_VIEWNAMES_SET[0]}`;
-			var statement = `Run database view ${databasenameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let viewnameValue = `${TEST_VIEWNAMES_SET[0]}`;
+			let statement = `Run database view ${databasenameValue}`;
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[1].prompt) {
 					room.user.say('mimiron', `${viewnameValue}`);
 				}
@@ -1571,7 +1571,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1588,13 +1588,13 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; first value in values list; second value in values list; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-			var viewnameValue = `${TEST_VIEWNAMES_SET[0]}`;
-			var statement = `Run database view ${databasenameValue} ${viewnameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+			let viewnameValue = `${TEST_VIEWNAMES_SET[0]}`;
+			let statement = `Run database view ${databasenameValue} ${viewnameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1611,13 +1611,13 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base entity; first value in entities list; second value in entities list; no error expected', function(done) {
-			var databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
-			var viewnameValue = `${TEST_VIEWNAMES_LATEST[3]}`;
-			var statement = `Run database view ${databasenameValue} ${viewnameValue}`;
-			var replyFn = function(msg) {
+			let databasenameValue = `${TEST_DATABASENAMES_LATEST[3]}`;
+			let viewnameValue = `${TEST_VIEWNAMES_LATEST[3]}`;
+			let statement = `Run database view ${databasenameValue} ${viewnameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1636,12 +1636,12 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single keyword parameter type; with values', function() {
-		var classParameter = CLASS_PARAMETER_KEYWORD;
+		let classParameter = CLASS_PARAMETER_KEYWORD;
 
 		it('Base keyword; no value; enter value not in list at first prompt; no error expected', function(done) {
-			var resourceValue = 'somevalue';
-			var statement = 'Get application resource info';
-			var replyFn = function(msg) {
+			let resourceValue = 'somevalue';
+			let statement = 'Get application resource info';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${resourceValue}`);
 				}
@@ -1649,7 +1649,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1664,9 +1664,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base keyword; no value; enter value in list at first prompt; no error expected', function(done) {
-			var resourceValue = `${CLASS_PARAMETER_KEYWORD.parameters[0].values[0]}`;
-			var statement = 'Get application resource info';
-			var replyFn = function(msg) {
+			let resourceValue = `${CLASS_PARAMETER_KEYWORD.parameters[0].values[0]}`;
+			let statement = 'Get application resource info';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${resourceValue}`);
 				}
@@ -1674,7 +1674,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1689,12 +1689,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base keyword; value in list; no error expected', function(done) {
-			var resourceValue = `${CLASS_PARAMETER_KEYWORD.parameters[0].values[0]}`;
-			var statement = `Get application ${resourceValue} resource info`;
-			var replyFn = function(msg) {
+			let resourceValue = `${CLASS_PARAMETER_KEYWORD.parameters[0].values[0]}`;
+			let statement = `Get application ${resourceValue} resource info`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1709,9 +1709,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base keyword; 2 values not in list (does not matter); Reenter same statement at first prompt; enter value at second prompt; no error expected', function(done) {
-			var resourceValue = `${CLASS_PARAMETER_KEYWORD.parameters[0].values[0]}`;
-			var statement = 'Get application someresource resource info from anotherthing';
-			var replyFn = function(msg) {
+			let resourceValue = `${CLASS_PARAMETER_KEYWORD.parameters[0].values[0]}`;
+			let statement = 'Get application someresource resource info from anotherthing';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', statement);
 				}
@@ -1722,7 +1722,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters).then(function(parameters) {
@@ -1739,9 +1739,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base keyword; no value; enter phrase with value not in list at first prompt; enter none at second prompt; enter value not in list at third prompt; no error expected', function(done) {
-			var resourceValue = `${CLASS_PARAMETER_KEYWORD.parameters[0].values[0]}`;
-			var statement = 'Get application resource info';
-			var replyFn = function(msg) {
+			let resourceValue = `${CLASS_PARAMETER_KEYWORD.parameters[0].values[0]}`;
+			let statement = 'Get application resource info';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', 'I want memry or memor or remy');
 				}
@@ -1755,7 +1755,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1772,12 +1772,12 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single number parameter type', function() {
-		var classParameter = CLASS_PARAMETER_NUMBER;
+		let classParameter = CLASS_PARAMETER_NUMBER;
 
 		it('Base number; no value; enter value at first prompt; no error expected', function(done) {
-			var instancesValue = '3';
-			var statement = 'Scale application';
-			var replyFn = function(msg) {
+			let instancesValue = '3';
+			let statement = 'Scale application';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${instancesValue}`);
 				}
@@ -1785,7 +1785,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1800,12 +1800,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base number; value in statement; no error expected', function(done) {
-			var instancesValue = '4';
-			var statement = `Scale application to ${instancesValue} instances`;
-			var replyFn = function(msg) {
+			let instancesValue = '4';
+			let statement = `Scale application to ${instancesValue} instances`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1822,13 +1822,13 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single repouser and reponame parameter type', function() {
-		var classParameter = CLASS_PARAMETER_REPOUSER_REPONAME;
+		let classParameter = CLASS_PARAMETER_REPOUSER_REPONAME;
 
 		it('Base repouser/reponame; no values; enter values at first prompt; no error expected', function(done) {
-			var repouserValue = 'testuser';
-			var reponameValue = 'testname';
-			var statement = 'Open github issue';
-			var replyFn = function(msg) {
+			let repouserValue = 'testuser';
+			let reponameValue = 'testname';
+			let statement = 'Open github issue';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${repouserValue}`);
 				}
@@ -1839,7 +1839,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1856,13 +1856,13 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base repouser/reponame; values in statement; no error expected', function(done) {
-			var repouserValue = 'testuser';
-			var reponameValue = 'testname';
-			var statement = `Open github issue against ${repouserValue}/${reponameValue}`;
-			var replyFn = function(msg) {
+			let repouserValue = 'testuser';
+			let reponameValue = 'testname';
+			let statement = `Open github issue against ${repouserValue}/${reponameValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1881,12 +1881,12 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single repourl parameter type', function() {
-		var classParameter = CLASS_PARAMETER_REPOURL;
+		let classParameter = CLASS_PARAMETER_REPOURL;
 
 		it('Base repourl; no value; enter value at first prompt; no error expected', function(done) {
-			var repourlValue = 'https://github.com/repoorg/reponame';
-			var statement = 'Deploy github';
-			var replyFn = function(msg) {
+			let repourlValue = 'https://github.com/repoorg/reponame';
+			let statement = 'Deploy github';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${repourlValue}`);
 				}
@@ -1894,7 +1894,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1909,12 +1909,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base repourl; value in statement; no error expected', function(done) {
-			var repourlValue = 'https://github.com/repoorg/reponame';
-			var statement = `Deploy github ${repourlValue}`;
-			var replyFn = function(msg) {
+			let repourlValue = 'https://github.com/repoorg/reponame';
+			let statement = `Deploy github ${repourlValue}`;
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1931,12 +1931,12 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for single city parameter type', function() {
-		var classParameter = CLASS_PARAMETER_CITY;
+		let classParameter = CLASS_PARAMETER_CITY;
 
 		it('Base city; no value; enter value at first prompt; no error expected', function(done) {
-			var cityValue = 'Raleigh';
-			var statement = 'Get weather';
-			var replyFn = function(msg) {
+			let cityValue = 'Raleigh';
+			let statement = 'Get weather';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', `${cityValue}`);
 				}
@@ -1944,7 +1944,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1959,12 +1959,12 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base city; value in list; no error expected', function(done) {
-			var cityValue = 'Raleigh';
-			var statement = 'Get weather for Raleigh, NC';
-			var replyFn = function(msg) {
+			let cityValue = 'Raleigh';
+			let statement = 'Get weather for Raleigh, NC';
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -1979,9 +1979,9 @@ describe('Test the entity extracting', function(){
 		});
 
 		it('Base city; no value; enter phrase with value at first prompt; enter none at second prompt; enter value not in list at third prompt; no error expected', function(done) {
-			var cityValue = 'Raleigh';
-			var statement = 'Get weather';
-			var replyFn = function(msg) {
+			let cityValue = 'Raleigh';
+			let statement = 'Get weather';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[0].prompt) {
 					room.user.say('mimiron', 'I\'d like weather for Ralgh');
 				}
@@ -1995,7 +1995,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -2012,13 +2012,13 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntity() for two entity parameter types; with values and entityfunction, and no optional', function() {
-		var classParameter = CLASS_PARAMETER_ENTITY2_V_F;
+		let classParameter = CLASS_PARAMETER_ENTITY2_V_F;
 
 		it('Base entity; no value; enter first value at first prompt; enter second value at first prompt; no error expected', function(done) {
-			var databasenameValue = 'somedatabase';
-			var viewnameValue = 'someview';
-			var statement = 'Run database view';
-			var replyFn = function(msg) {
+			let databasenameValue = 'somedatabase';
+			let viewnameValue = 'someview';
+			let statement = 'Run database view';
+			let replyFn = function(msg) {
 				if (msg === classParameter.parameters[1].prompt) {
 					room.user.say('mimiron', `${viewnameValue}`);
 				}
@@ -2026,7 +2026,7 @@ describe('Test the entity extracting', function(){
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				}
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			entityManager.getEntity(room.robot, res, statement, classParameter._id, 'viewname', { databasename: `${databasenameValue}` }).then(function(parameters) {
 				expect(parameters).to.not.be.undefined;
 				expect(parameters.databasename).to.not.be.undefined;
@@ -2042,14 +2042,14 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntities() for no parameters', function() {
-		var classParameter = CLASS_PARAMETER_NOPARAMS;
+		let classParameter = CLASS_PARAMETER_NOPARAMS;
 
 		it('No parameters; no error expected', function(done) {
-			var statement = 'List applications';
-			var replyFn = function(msg) {
+			let statement = 'List applications';
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 				expect(classEmitTarget).to.not.be.undefined;
 				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -2065,14 +2065,14 @@ describe('Test the entity extracting', function(){
 	});
 
 	context('Testing getEntity() for no parameters', function() {
-		var classParameter = CLASS_PARAMETER_NOPARAMS;
+		let classParameter = CLASS_PARAMETER_NOPARAMS;
 
 		it('No parameters; no error expected', function(done) {
-			var statement = 'List applications';
-			var replyFn = function(msg) {
+			let statement = 'List applications';
+			let replyFn = function(msg) {
 				done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 			};
-			var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 			entityManager.getEntity(room.robot, res, statement, classParameter._id, 'viewname', {}).then(function(parameters) {
 				done(new Error('Unexpected good response.'));
 			}).catch(function(error) {
@@ -2088,7 +2088,7 @@ describe('Test the entity extracting', function(){
 	});
 
 	describe('Test the entity extracting with parsing disabled', function(){
-		var saveParsingDisabled;
+		let saveParsingDisabled;
 
 		before(function() {
 			saveParsingDisabled = env.entityParsingDisabled;
@@ -2102,13 +2102,13 @@ describe('Test the entity extracting', function(){
 		});
 
 		context('Testing getEntities() for two entity parameter types; with values and entityfunction, and no optional', function() {
-			var classParameter = CLASS_PARAMETER_ENTITY2_V_F;
+			let classParameter = CLASS_PARAMETER_ENTITY2_V_F;
 
 			it('Base entity; no value; enter first value at first prompt; enter second value at first prompt; no error expected', function(done) {
-				var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-				var viewnameValue = `${TEST_VIEWNAMES_SET[0]}`;
-				var statement = `Run database view ${databasenameValue} ${viewnameValue}`;
-				var replyFn = function(msg) {
+				let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+				let viewnameValue = `${TEST_VIEWNAMES_SET[0]}`;
+				let statement = `Run database view ${databasenameValue} ${viewnameValue}`;
+				let replyFn = function(msg) {
 					if (msg === i18n.__('cognitive.prompt.param.parsingdisabled', classParameter.parameters[0].title || classParameter.parameters[0].name)) {
 						room.user.say('mimiron', `${databasenameValue}`);
 					}
@@ -2119,7 +2119,7 @@ describe('Test the entity extracting', function(){
 						done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 					}
 				};
-				var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+				let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 				nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 					expect(classEmitTarget).to.not.be.undefined;
 					return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -2136,10 +2136,10 @@ describe('Test the entity extracting', function(){
 			});
 
 			it('Base entity; both values (ignored); enter first value at first prompt; enter exit at first prompt; no error expected', function(done) {
-				var databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
-				var viewnameValue = `${TEST_VIEWNAMES_SET[0]}`;
-				var statement = `Run database view ${databasenameValue} ${viewnameValue}`;
-				var replyFn = function(msg) {
+				let databasenameValue = `${TEST_DATABASENAMES_SET[0]}`;
+				let viewnameValue = `${TEST_VIEWNAMES_SET[0]}`;
+				let statement = `Run database view ${databasenameValue} ${viewnameValue}`;
+				let replyFn = function(msg) {
 					if (msg === i18n.__('cognitive.prompt.param.parsingdisabled', classParameter.parameters[0].title || classParameter.parameters[0].name)) {
 						room.user.say('mimiron', `${databasenameValue}`);
 					}
@@ -2150,7 +2150,7 @@ describe('Test the entity extracting', function(){
 						done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 					}
 				};
-				var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+				let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 				nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 					expect(classEmitTarget).to.not.be.undefined;
 					return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -2168,13 +2168,13 @@ describe('Test the entity extracting', function(){
 		});
 
 		context('Testing getEntity() for two entity parameter types; with values and entityfunction, and no optional', function() {
-			var classParameter = CLASS_PARAMETER_ENTITY2_V_F;
+			let classParameter = CLASS_PARAMETER_ENTITY2_V_F;
 
 			it('Base entity; no value; enter first value at first prompt; enter second value at first prompt; no error expected', function(done) {
-				var databasenameValue = 'somedatabase';
-				var viewnameValue = 'someview';
-				var statement = 'Run database view';
-				var replyFn = function(msg) {
+				let databasenameValue = 'somedatabase';
+				let viewnameValue = 'someview';
+				let statement = 'Run database view';
+				let replyFn = function(msg) {
 					if (msg === i18n.__('cognitive.prompt.param.parsingdisabled', classParameter.parameters[1].title || classParameter.parameters[1].name)) {
 						room.user.say('mimiron', `${viewnameValue}`);
 					}
@@ -2182,7 +2182,7 @@ describe('Test the entity extracting', function(){
 						done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 					}
 				};
-				var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+				let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 				entityManager.getEntity(room.robot, res, statement, classParameter._id, 'viewname', { databasename: `${databasenameValue}` }).then(function(parameters) {
 					expect(parameters).to.not.be.undefined;
 					expect(parameters.databasename).to.not.be.undefined;
@@ -2198,14 +2198,14 @@ describe('Test the entity extracting', function(){
 		});
 
 		context('Testing getEntities() for two entity parameter types; with optional', function() {
-			var classParameter = CLASS_PARAMETER_ENTITY2_V_F_R;
+			let classParameter = CLASS_PARAMETER_ENTITY2_V_F_R;
 
 			it('Base entity; no value; no prompts; no error expected', function(done) {
-				var statement = 'Run database view';
-				var replyFn = function(msg) {
+				let statement = 'Run database view';
+				let replyFn = function(msg) {
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				};
-				var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+				let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 				nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 					expect(classEmitTarget).to.not.be.undefined;
 					return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
@@ -2224,7 +2224,7 @@ describe('Test the entity extracting', function(){
 	});
 
 	describe('Test the entity extracting with parsing disabled', function(){
-		var saveAlchemyUrl;
+		let saveAlchemyUrl;
 
 		before(function() {
 			saveAlchemyUrl = env.alchemy_url;
@@ -2238,14 +2238,14 @@ describe('Test the entity extracting', function(){
 		});
 
 		context('Testing getEntities() for single city parameter type', function() {
-			var classParameter = CLASS_PARAMETER_CITY;
+			let classParameter = CLASS_PARAMETER_CITY;
 
 			it('Base city; value in list; no error expected', function(done) {
-				var statement = 'Get weather for Raleigh, NC';
-				var replyFn = function(msg) {
+				let statement = 'Get weather for Raleigh, NC';
+				let replyFn = function(msg) {
 					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
 				};
-				var res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+				let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
 				nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
 					expect(classEmitTarget).to.not.be.undefined;
 					return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);

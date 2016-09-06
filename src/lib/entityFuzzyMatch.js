@@ -6,8 +6,8 @@
   */
 'use strict';
 
-var path = require('path');
-var TAG = path.basename(__filename);
+const path = require('path');
+const TAG = path.basename(__filename);
 
 const env = require('./env');
 const Fuse = require('fuse.js');
@@ -58,10 +58,10 @@ function FuzzyMatcher(inRobot) {
  */
 function merge(allMatches, newMatches) {
 	if (allMatches.length > 0) {
-		for (var i = 0; i < allMatches.length; i++) {
+		for (let i = 0; i < allMatches.length; i++) {
 			let allMatch = allMatches[i];
 			let newMatchIndex = -1;
-			for (var j = 0; j < newMatches.length; j++) {
+			for (let j = 0; j < newMatches.length; j++) {
 				let newMatch = newMatches[j];
 				if (newMatch.item === allMatch.item) {
 					newMatchIndex = j;
@@ -88,7 +88,7 @@ function merge(allMatches, newMatches) {
  * @param {array of maps} [The sorted set of matches.]
  */
 function sort(allMatches) {
-	var sortedMatches = allMatches.sort(function(match1, match2) {
+	let sortedMatches = allMatches.sort(function(match1, match2) {
 		return match1.score - match2.score;
 	});
 	return sortedMatches;
@@ -104,7 +104,7 @@ function sort(allMatches) {
  * @param {array of strings} [The sorted set of best matching actual values.]
  */
 function convert(allMatches, actualValues) {
-	var bestValues = [];
+	let bestValues = [];
 	if (allMatches && allMatches.length > 0) {
 		let bestScore = allMatches[0].score;
 		allMatches.forEach(function(allMatch) {
@@ -132,12 +132,12 @@ function convert(allMatches, actualValues) {
  * @param {array of strings} [The best matches in order.]
  */
 FuzzyMatcher.prototype.match = function(possibleValues, actualValues) {
-	var bestMatches = [];
+	let bestMatches = [];
 
 	if (possibleValues && actualValues) {
-		var matchedItems = [];
+		let matchedItems = [];
 		let fuse = new Fuse(actualValues, this.options);
-		for (var i = 0; i < possibleValues.length; i++) {
+		for (let i = 0; i < possibleValues.length; i++) {
 			let result = fuse.search(possibleValues[i]);
 			this.robot.logger.debug(`${TAG}: Best fuzzy matches for possible value [${possibleValues[i]}] against the actual values [${actualValues}] are [${JSON.stringify(result)}]`);
 			matchedItems = merge(matchedItems, result);

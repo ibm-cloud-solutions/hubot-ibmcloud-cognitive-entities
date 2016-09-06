@@ -6,8 +6,8 @@
   */
 'use strict';
 
-var path = require('path');
-var TAG = path.basename(__filename);
+const path = require('path');
+const TAG = path.basename(__filename);
 
 const env = require('./env');
 const watson = require('watson-developer-cloud');
@@ -155,7 +155,7 @@ function EntityManager() {
 
 	// Update the Watson Alchemy constructor options
 	if (env.alchemy_url && env.alchemy_apikey) {
-		var alchemy_ctor_opts = {};
+		let alchemy_ctor_opts = {};
 		alchemy_ctor_opts.url = env.alchemy_url;
 		alchemy_ctor_opts.apikey = env.alchemy_apikey;
 
@@ -185,11 +185,11 @@ function getTextsByClass(className) {
 		if (!textsByClass) {
 			textsByClass = {};
 			nlcconfig.getAllClasses().then(function(classes) {
-				for (var i = 0; i < classes.length; i++) {
-					var classItem = classes[i];
-					var text = classItem[0];
-					var cName = classItem[1];
-					var texts = textsByClass[cName] || [];
+				for (let i = 0; i < classes.length; i++) {
+					let classItem = classes[i];
+					let text = classItem[0];
+					let cName = classItem[1];
+					let texts = textsByClass[cName] || [];
 					texts.push(text);
 					textsByClass[cName] = texts;
 				}
@@ -251,9 +251,9 @@ function doAskForJustValueNoParsing(robot, res, switchBoard, className, classPar
 		if (classParameter.required === undefined || classParameter.required === true) {
 			robot.logger.debug(`${TAG}: doAskForJustValueNoParsing(): Parsing is disabled; prompting user to enter just the value for the ${getDisplayableClassParameter(className, classParameter)} parameter.`);
 
-			var prompt = i18n.__('cognitive.prompt.param.parsingdisabled', classParameter.title || classParameter.name);
+			let prompt = i18n.__('cognitive.prompt.param.parsingdisabled', classParameter.title || classParameter.name);
 			utils.getExpectedResponse(res, robot, switchBoard, prompt, /(.*)/i).then(function(dialogResult) {
-				var reply = dialogResult.match[1].trim();
+				let reply = dialogResult.match[1].trim();
 				robot.logger.debug(`${TAG}: doAskForJustValueNoParsing(): Dialog reply is: ${reply}`);
 				if (reply === 'exit') {
 					robot.logger.debug(`${TAG}: doAskForJustValueNoParsing(): User exited with no value for the ${getDisplayableClassParameter(className, classParameter)} parameter.`);
@@ -338,7 +338,7 @@ function getLatestEntities(robot, res, className, classParameter, parameters) {
  * @return {bool} [True if fuzzy match is possible.]
  */
 function isFuzzyMatchPossible(classParameter, latestEntities) {
-	var fuzzyMatchPossible = false;
+	let fuzzyMatchPossible = false;
 	if (classParameter.type === 'keyword') {
 		fuzzyMatchPossible = true;
 	}
@@ -369,13 +369,14 @@ function doFuzzyMatch(robot, res, switchBoard, className, classParameter, latest
 
 		// Get set of up to 10 of the best fuzzy matches (within the set of entities) to the possible values
 		let fuzzyMatcher = new FuzzyMatcher(robot);
-		var bestMatches = fuzzyMatcher.match(possibleValues, latestEntities || classParameter.values);
+		let bestMatches = fuzzyMatcher.match(possibleValues, latestEntities || classParameter.values);
 		robot.logger.debug(`${TAG}: doFuzzyMatch(): Best fuzzy matches for the ${getDisplayableClassParameter(className, classParameter)} parameter have been found; best matches = [${bestMatches}]; prompting user to choose one.`);
 		if (bestMatches && bestMatches.length > 0) {
 
 			// Build prompt with choices to present to user for selection
-			var bestMatchesString = '';
-			for (var i = 0; i < bestMatches.length; i++) {
+			let bestMatchesString = '';
+			let i = 0;
+			for (i = 0; i < bestMatches.length; i++) {
 				let fuzzyString = i18n.__('fuzzy.result.item', i + 1, bestMatches[i]) + '\n';
 				bestMatchesString += fuzzyString;
 			}
@@ -384,9 +385,9 @@ function doFuzzyMatch(robot, res, switchBoard, className, classParameter, latest
 
 			// Initiate conversation with user to obtain selection (by text, by number, or by 'none')
 			utils.getExpectedResponse(res, robot, switchBoard, prompt, /(.*)/i).then(function(dialogResult) {
-				var reply = dialogResult.match[1].trim();
+				let reply = dialogResult.match[1].trim();
 				robot.logger.debug(`${TAG}: doFuzzyMatch(): Dialog reply is: ${reply}`);
-				var parameterValue;
+				let parameterValue;
 
 				// Handle text selected
 				if (isNaN(reply)) {
@@ -398,8 +399,8 @@ function doFuzzyMatch(robot, res, switchBoard, className, classParameter, latest
 					// See if one of the choices was entered
 					else {
 						// Search best matches for a match with entered choice
-						var matchFound = false;
-						for (var j = 0; j < bestMatches.length; j++) {
+						let matchFound = false;
+						for (let j = 0; j < bestMatches.length; j++) {
 							if (reply === bestMatches[j]) {
 								matchFound = true;
 								break;
@@ -568,9 +569,9 @@ function doAskForJustValue(robot, res, switchBoard, className, classParameter) {
 	return new Promise(function(resolve, reject) {
 
 		robot.logger.debug(`${TAG}: doAskForJustValue(): Prompting user to enter just the value for the ${getDisplayableClassParameter(className, classParameter)} parameter.`);
-		var prompt = i18n.__('cognitive.prompt.param.again', classParameter.title || classParameter.name);
+		let prompt = i18n.__('cognitive.prompt.param.again', classParameter.title || classParameter.name);
 		utils.getExpectedResponse(res, robot, switchBoard, prompt, /(.*)/i).then(function(dialogResult) {
-			var reply = dialogResult.match[1].trim();
+			let reply = dialogResult.match[1].trim();
 			robot.logger.debug(`${TAG}: doAskForJustValue(): Dialog reply is: ${reply}`);
 			if (reply === 'exit') {
 				robot.logger.debug(`${TAG}: doAskForJustValue(): User exited with no value for the ${getDisplayableClassParameter(className, classParameter)} parameter.`);
@@ -623,7 +624,7 @@ function doAskForValue(robot, res, switchBoard, statement, className, classParam
 		robot.logger.debug(`${TAG}: doAskForValue(): Prompting user to enter the value for the ${getDisplayableClassParameter(className, classParameter)} parameter.`);
 		let prompt = classParameter.prompt || i18n.__('cognitive.prompt.param', classParameter.title || classParameter.name);
 		utils.getExpectedResponse(res, robot, switchBoard, prompt, /(.*)/i).then(function(dialogResult) {
-			var reply = dialogResult.match[1].trim();
+			let reply = dialogResult.match[1].trim();
 			robot.logger.debug(`${TAG}: doAskForValue(): Dialog reply is: ${reply}`);
 
 			// If user wants out ('exit')
@@ -642,7 +643,7 @@ function doAskForValue(robot, res, switchBoard, statement, className, classParam
 
 				// Use nlc/fuzzy match to get parameter value from statement
 				robot.logger.debug(`${TAG}: doAskForValue(): Looking for best match parameter value for the ${getDisplayableClassParameter(className, classParameter)} parameter within the statement = ${reply}.`);
-				var replyEntityDecoder = entityDecoder.clone(reply);
+				let replyEntityDecoder = entityDecoder.clone(reply);
 				doBestMatch(robot, res, switchBoard, reply, className, classParameter, replyEntityDecoder, latestEntities || classParameter.values).then(function(parameterValue) {
 
 					// If value found, use it
@@ -704,7 +705,7 @@ function doAskForValue(robot, res, switchBoard, statement, className, classParam
 function processStatementForParameter(robot, res, switchBoard, statement, className, classParameter, entityDecoder, parameters) {
 	return new Promise(function(resolve, reject) {
 		robot.logger.debug(`${TAG}: processStatementForParameter(): Looking for parameter value for the ${getDisplayableClassParameter(className, classParameter)} parameter within the statement = ${statement}.`);
-		var latestEntities;
+		let latestEntities;
 
 		// Request the latest, most complete set of entity values from the application
 		getLatestEntities(robot, res, className, classParameter, parameters).then(function(entityList) {
@@ -768,13 +769,13 @@ function processStatementForParameter(robot, res, switchBoard, statement, classN
 function promptEachParameterValue(robot, res, className, classParameters) {
 	return new Promise(function(resolve, reject) {
 
-		var parameters = {};
+		let parameters = {};
 
 		// The same Conversation must be used or the same reply is returned for each parameter.
 		let switchBoard = new Conversation(robot);
 
 		// Attempt to extract each of the parameter values.
-		var prom = Promise.resolve();
+		let prom = Promise.resolve();
 		return classParameters.reduce(function(p, classParameter) {
 			return p.then(function() {
 				return doAskForJustValueNoParsing(robot, res, switchBoard, className, classParameter);
@@ -815,13 +816,13 @@ function processStatementPhase1(robot, statement, className, classParameters, en
 	return new Promise(function(resolve, reject) {
 
 		// Current number of parameter values found
-		var numParameterValues = Object.keys(parameters).length;
+		let numParameterValues = Object.keys(parameters).length;
 
 		// Determine if any parameter values are missing.
 		// If so, queue function to extract parameter value.
-		var missingClassParameters = [];
-		for (var i = 0; i < classParameters.length; i++) {
-			var classParameter = classParameters[i];
+		let missingClassParameters = [];
+		for (let i = 0; i < classParameters.length; i++) {
+			let classParameter = classParameters[i];
 			if (!parameters[classParameter.name]) {
 				missingClassParameters.push(classParameter);
 			}
@@ -831,13 +832,13 @@ function processStatementPhase1(robot, statement, className, classParameters, en
 		if (missingClassParameters.length > 0) {
 
 			// Remove any parameters found on the previous pass from the statement and create a new decoder.
-			var modStatement = removeParameterValuesFromStatement(statement, parameters);
+			let modStatement = removeParameterValuesFromStatement(statement, parameters);
 			entityDecoder.modifyStatement(modStatement);
 			robot.logger.debug(`${TAG}: processStatementPhase1(): Statement with parameter values removed = ${modStatement}.`);
 
 			// Create array of entity handler promises to execute
-			var entityHandlers = [];
-			for (var j = 0; j < missingClassParameters.length; j++) {
+			let entityHandlers = [];
+			for (let j = 0; j < missingClassParameters.length; j++) {
 				let missingClassParameter = missingClassParameters[j];
 				entityHandlers.push(entityHandler.getEntityValue(missingClassParameter.type, modStatement, entityDecoder, missingClassParameter.values || []));
 			}
@@ -847,7 +848,7 @@ function processStatementPhase1(robot, statement, className, classParameters, en
 				robot.logger.debug(`${TAG}: processStatementPhase1(): Results of this iteration of Phase 1 processing = ${JSON.stringify(results)}.`);
 
 				// Gather all the resulting parameter values into the given parameters map
-				for (var k = 0; k < results.length; k++) {
+				for (let k = 0; k < results.length; k++) {
 					if (results[k]) parameters[classParameters[k].name] = results[k];
 				}
 
@@ -916,9 +917,9 @@ function processStatementPhase2(robot, res, statement, className, classParameter
 
 		// Determine if any parameter values are missing.
 		// If so, queue function to extract parameter value.
-		var missingClassParameters = [];
-		for (var i = 0; i < classParameters.length; i++) {
-			var classParameter = classParameters[i];
+		let missingClassParameters = [];
+		for (let i = 0; i < classParameters.length; i++) {
+			let classParameter = classParameters[i];
 			if (!parameters[classParameter.name]) {
 				missingClassParameters.push(classParameter);
 			}
@@ -931,12 +932,12 @@ function processStatementPhase2(robot, res, statement, className, classParameter
 			let switchBoard = new Conversation(robot);
 
 			// Modify the statement being used by removing all parameter values.
-			var modStatement = removeParameterValuesFromStatement(statement, parameters);
+			let modStatement = removeParameterValuesFromStatement(statement, parameters);
 			entityDecoder.modifyStatement(modStatement);
 			robot.logger.debug(`${TAG}: processStatementPhase2(): Statement with parameter values removed = ${modStatement}.`);
 
 			// Process each parameter individually until a value is obtained or never will be
-			var prom = Promise.resolve();
+			let prom = Promise.resolve();
 			return missingClassParameters.reduce(function(p, missingClassParameter) {
 				return p.then(function() {
 					return processStatementForParameter(robot, res, switchBoard, modStatement, className, missingClassParameter, entityDecoder, parameters);
@@ -997,7 +998,7 @@ function processStatementPhase2(robot, res, statement, className, classParameter
  * @return {Promise: map} [A map of parameter name -> parameter value via Promise.resolve().]
  */
 EntityManager.prototype.getEntities = function(robot, res, statement, className, classParameters) {
-	var self = this;
+	let self = this;
 	return new Promise(function(resolve, reject) {
 		robot.logger.debug(`${TAG}: getEntities() invoked with statement = ${statement}; className = ${className}; classParameters = ${JSON.stringify(classParameters)}.`);
 
@@ -1014,7 +1015,7 @@ EntityManager.prototype.getEntities = function(robot, res, statement, className,
 
 		// If there are any parameter values to be obtained; obtain them
 		else if (classParameters && classParameters.length > 0) {
-			var entityDecoder;
+			let entityDecoder;
 
 			// Obtain the set of seeded text strings associated with the class (used by EntityDecoder)
 			getTextsByClass(className).then(function(textsForClass) {
@@ -1071,15 +1072,15 @@ EntityManager.prototype.getEntities = function(robot, res, statement, className,
  * @return {Promise: map} [A map of parameter name -> parameter value via Promise.resolve().]
  */
 EntityManager.prototype.getEntity = function(robot, res, statement, className, parameterName, parameters) {
-	var self = this;
+	let self = this;
 	return new Promise(function(resolve, reject) {
 		robot.logger.debug(`${TAG}: getEntity() invoked with statement = ${statement}; className = ${className}; parameterName = ${parameterName}; parameters = ${JSON.stringify(parameters)}.`);
 
 		// Call emit target if specified with parameter values
 		nlcconfig.getClassEmitTarget(className).then(function(tgt) {
-			var classParameter;
+			let classParameter;
 			if (tgt && tgt.parameters) {
-				for (var i = 0; i < tgt.parameters.length; i++) {
+				for (let i = 0; i < tgt.parameters.length; i++) {
 					if (tgt.parameters[i].name === parameterName) {
 						classParameter = tgt.parameters[i];
 						break;
