@@ -638,6 +638,11 @@ function doAskForValue(robot, res, switchBoard, statement, className, classParam
 				resolve(reply);
 			}
 
+			// Handle wildcard specially ... just return what user entered on this line
+			else if (classParameter.type === 'wildcard'){
+				resolve(reply);
+			}
+
 			// User replied with multiple words; use nlc/fuzzy match to see if we can figure it out
 			else {
 

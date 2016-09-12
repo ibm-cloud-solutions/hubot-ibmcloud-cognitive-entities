@@ -285,6 +285,27 @@ const TEXTS_NUMBER = [
 	'Scale app instances'
 ];
 
+const CLASS_PARAMETER_WILDCARD = {
+	_id: 'test.wildcard',
+	emittarget: 'test.wildcard.target',
+	description: 'Test wildcard description',
+	storageType: 'private',
+	parameters: [
+		{
+			name: 'searchstring',
+			title: 'search string',
+			type: 'wildcard',
+			prompt: 'OK. What is the value for the search string?'
+		}
+	]
+};
+
+const TEXTS_WILDCARD = [
+	'I want to search something on stuff',
+	'I\'d like to run a search against stuff',
+	'Search stuff'
+];
+
 const CLASS_PARAMETER_REPOUSER_REPONAME = {
 	_id: 'test.repouser.reponame',
 	emittarget: 'test.repouser.reponame.target',
@@ -373,6 +394,7 @@ const ALL_PARAMETERS = [
 	[ [ CLASS_PARAMETER_ENTITY2_V_F, CLASS_PARAMETER_ENTITY2_V_F_R ], TEXTS_ENTITY2 ],
 	[ [ CLASS_PARAMETER_KEYWORD ], TEXTS_KEYWORD ],
 	[ [ CLASS_PARAMETER_NUMBER ], TEXTS_NUMBER ],
+	[ [ CLASS_PARAMETER_WILDCARD ], TEXTS_WILDCARD ],
 	[ [ CLASS_PARAMETER_REPOUSER_REPONAME ], TEXTS_REPOUSER_REPONAME ],
 	[ [ CLASS_PARAMETER_REPOURL ], TEXTS_REPOURL ],
 	[ [ CLASS_PARAMETER_CITY ], TEXTS_CITY ],
@@ -1813,6 +1835,36 @@ describe('Test the entity extracting', function(){
 				expect(parameters).to.not.be.undefined;
 				expect(parameters.instances).to.not.be.undefined;
 				expect(parameters.instances).to.eql(`${instancesValue}`);
+				done();
+			}).catch(function(error) {
+				done(error);
+			});
+		});
+
+	});
+
+	context('Testing getEntities() for single wildcard parameter type', function() {
+		let classParameter = CLASS_PARAMETER_WILDCARD;
+
+		it('Base entity; no value; enter value at first prompt; no error expected', function(done) {
+			let searchstringValue = 'some sort of search string';
+			let statement = 'search for stuff';
+			let replyFn = function(msg) {
+				if (msg === classParameter.parameters[0].prompt) {
+					room.user.say('mimiron', `${searchstringValue}`);
+				}
+				else {
+					done(new Error(`Unexpected message sent to bot user: ${msg}.`));
+				}
+			};
+			let res = { message: {text: statement, user: {id: 'mimiron'}}, reply: replyFn };
+			nlcconfig.getClassEmitTarget(classParameter._id).then(function(classEmitTarget) {
+				expect(classEmitTarget).to.not.be.undefined;
+				return entityManager.getEntities(room.robot, res, statement, classParameter._id, classEmitTarget.parameters);
+			}).then(function(parameters) {
+				expect(parameters).to.not.be.undefined;
+				expect(parameters.searchstring).to.not.be.undefined;
+				expect(parameters.searchstring).to.eql(`${searchstringValue}`);
 				done();
 			}).catch(function(error) {
 				done(error);
