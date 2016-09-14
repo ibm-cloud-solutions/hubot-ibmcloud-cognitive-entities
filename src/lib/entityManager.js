@@ -151,7 +151,10 @@ let textsByClass;
  *
  * @constructor
  */
-function EntityManager() {
+function EntityManager(robot) {
+
+	// Create Conversation to use throughout
+	this.switchBoard = new Conversation(robot);
 
 	// Update the Watson Alchemy constructor options
 	if (env.alchemy_url && env.alchemy_apikey) {
@@ -767,17 +770,15 @@ function processStatementForParameter(robot, res, switchBoard, statement, classN
  *
  * @param {object} robot [The bot instance.]
  * @param {object} res [The bot response object.]
+ * @param {object} switchBoard [The hubot coversation swithboard to use.]
  * @param {string} className [The name of the class being processed.]
  * @param {array of maps} classParameters [The class parameters defined for the class being processed.]
  * @return {promise: map} [A map of parameter name -> parameter value via Promise.resolve().]
  */
-function promptEachParameterValue(robot, res, className, classParameters) {
+function promptEachParameterValue(robot, res, switchBoard, className, classParameters) {
 	return new Promise(function(resolve, reject) {
 
 		let parameters = {};
-
-		// The same Conversation must be used or the same reply is returned for each parameter.
-		let switchBoard = new Conversation(robot);
 
 		// Attempt to extract each of the parameter values.
 		let prom = Promise.resolve();
@@ -910,6 +911,7 @@ function processStatementPhase1(robot, statement, className, classParameters, en
  *
  * @param {object} robot [The bot instance.]
  * @param {object} res [The bot response object.]
+ * @param {object} switchBoard [The hubot coversation swithboard to use.]
  * @param {string} statement [The statement to process (containing the parameter values).]
  * @param {string} className [The name of the class being processed.]
  * @param {array of maps} classParameters [The class parameters defined for the class being processed.]
@@ -917,7 +919,7 @@ function processStatementPhase1(robot, statement, className, classParameters, en
  * @param {map} parameters [A map of parameter name -> parameter value.]
  * @return {promise: map} [A map of parameter name -> parameter value via Promise.resolve().]
  */
-function processStatementPhase2(robot, res, statement, className, classParameters, entityDecoder, parameters) {
+function processStatementPhase2(robot, res, switchBoard, statement, className, classParameters, entityDecoder, parameters) {
 	return new Promise(function(resolve, reject) {
 
 		// Determine if any parameter values are missing.
@@ -932,9 +934,6 @@ function processStatementPhase2(robot, res, statement, className, classParameter
 
 		// If there are missing parameter values, then attempt to extract the values.
 		if (missingClassParameters.length > 0) {
-
-			// The same Conversation must be used or the same reply is returned for each parameter.
-			let switchBoard = new Conversation(robot);
 
 			// Modify the statement being used by removing all parameter values.
 			let modStatement = removeParameterValuesFromStatement(statement, parameters);
@@ -1010,7 +1009,7 @@ EntityManager.prototype.getEntities = function(robot, res, statement, className,
 		// If the EntityManager is disabled, then prompt for each parameter value
 		if (env.isTrue(env.entityParsingDisabled)) {
 			robot.logger.debug(`${TAG}: getEntities(): Parameter parsing feature is disabled; asking user to enter each required parameter value.`);
-			promptEachParameterValue(robot, res, className, classParameters).then(function(parameters) {
+			promptEachParameterValue(robot, res, self.switchBoard, className, classParameters).then(function(parameters) {
 				robot.logger.debug(`${TAG}: getEntities(): Prompted parameter values = ${parameters}.`);
 				resolve(parameters);
 			}).catch(function(err) {
@@ -1029,7 +1028,7 @@ EntityManager.prototype.getEntities = function(robot, res, statement, className,
 				return processStatementPhase1(robot, statement, className, classParameters, entityDecoder, {});
 			}).then(function(parameters) {
 				robot.logger.debug(`${TAG}: getEntities(): Phase 1 parameter values = ${parameters}; starting Phase 2.`);
-				return processStatementPhase2(robot, res, statement, className, classParameters, entityDecoder, parameters);
+				return processStatementPhase2(robot, res, self.switchBoard, statement, className, classParameters, entityDecoder, parameters);
 			}).then(function(parameters) {
 				robot.logger.debug(`${TAG}: getEntities(): Phase 2 complete.  Returning parameter values = ${parameters} for statement = ${statement}; className = ${className}; classParameters = ${JSON.stringify(classParameters)}.`);
 				resolve(parameters);
@@ -1094,15 +1093,12 @@ EntityManager.prototype.getEntity = function(robot, res, statement, className, p
 			}
 			if (classParameter) {
 
-				// The same Conversation must be used or the same reply is returned for each parameter.
-				let switchBoard = new Conversation(robot);
-
 				// If the EntityManager is disabled, then prompt for each parameter value
 				if (env.isTrue(env.entityParsingDisabled)) {
 					robot.logger.debug(`${TAG}: getEntity(): Parameter parsing feature is disabled; asking user to enter each required parameter value.`);
 
 					// Attempt to extract the parameter value.
-					doAskForJustValueNoParsing(robot, res, switchBoard, className, classParameter).then(function(parameterValue) {
+					doAskForJustValueNoParsing(robot, res, self.switchBoard, className, classParameter).then(function(parameterValue) {
 						robot.logger.debug(`${TAG}: getEntity(): parameterValue = ${parameterValue}.`);
 						if (parameterValue) parameters[classParameter.name] = parameterValue;
 						robot.logger.debug(`${TAG}: getEntity(): Returning parameter values = ${parameters} for statement = ${statement}; className = ${className}; parameterName = ${parameterName}; classParameter = ${JSON.stringify(classParameter)}.`);
@@ -1122,7 +1118,7 @@ EntityManager.prototype.getEntity = function(robot, res, statement, className, p
 						let entityDecoder = new EntityDecoder(robot, statement, self.alchemy, textsForClass);
 
 						// Invoke function to find a value for the parameter
-						processStatementForParameter(robot, res, switchBoard, statement, className, classParameter, entityDecoder, parameters).then(function(parameterValue) {
+						processStatementForParameter(robot, res, self.switchBoard, statement, className, classParameter, entityDecoder, parameters).then(function(parameterValue) {
 							robot.logger.debug(`${TAG}: getEntity(): parameterValue = ${parameterValue}.`);
 							if (parameterValue) parameters[parameterName] = parameterValue;
 							robot.logger.debug(`${TAG}: getEntity(): Returning parameter values = ${parameters} for statement = ${statement}; className = ${className}; parameterName = ${parameterName}; classParameter = ${JSON.stringify(classParameter)}.`);

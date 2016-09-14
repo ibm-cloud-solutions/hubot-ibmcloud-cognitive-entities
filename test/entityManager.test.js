@@ -434,7 +434,6 @@ describe('Test the entity extracting', function(){
 	});
 
 	before(function(done) {
-		entityManager = new EntityManager();
 
 		return nlcDb.open().then((res) => {
 			db = res;
@@ -482,6 +481,7 @@ describe('Test the entity extracting', function(){
 
 	beforeEach(function() {
 		room = helper.createRoom();
+		entityManager = new EntityManager(room.robot);
 	});
 
 	afterEach(function() {
@@ -2145,8 +2145,6 @@ describe('Test the entity extracting', function(){
 		before(function() {
 			saveParsingDisabled = env.entityParsingDisabled;
 			env.entityParsingDisabled = true;
-
-			entityManager = new EntityManager();
 		});
 
 		after(function() {
@@ -2281,8 +2279,6 @@ describe('Test the entity extracting', function(){
 		before(function() {
 			saveAlchemyUrl = env.alchemy_url;
 			env.alchemy_url = undefined;
-
-			entityManager = new EntityManager();
 		});
 
 		after(function() {
